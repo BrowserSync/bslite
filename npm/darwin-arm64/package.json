@@ -1,0 +1,19 @@
+{
+  "name": "@browsersync/bslite-darwin-arm64",
+  "version": "0.0.2",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "bslite.darwin-arm64.node",
+  "files": [
+    "bslite.darwin-arm64.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "repository": "git@github.com:BrowserSync/bsrs.git"
+}
