@@ -1,3 +1,3 @@
-# `bs-win32-x64-msvc`
+# `@browsersync/bsrs-win32-x64-msvc`
 
-This is the **x86_64-pc-windows-msvc** binary for `bs`
+This is the **x86_64-pc-windows-msvc** binary for `@browsersync/bsrs`

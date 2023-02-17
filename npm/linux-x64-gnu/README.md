@@ -1,3 +1,3 @@
-# `bs-linux-x64-gnu`
+# `@browsersync/bsrs-linux-x64-gnu`
 
-This is the **x86_64-unknown-linux-gnu** binary for `bs`
+This is the **x86_64-unknown-linux-gnu** binary for `@browsersync/bsrs`

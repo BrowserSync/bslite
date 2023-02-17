@@ -1,5 +1,5 @@
 {
-  "name": "bs-darwin-x64",
+  "name": "@browsersync/bsrs-darwin-x64",
   "version": "0.0.0",
   "os": [
     "darwin"
@@ -7,12 +7,13 @@
   "cpu": [
     "x64"
   ],
-  "main": "bs.darwin-x64.node",
+  "main": "bsrs.darwin-x64.node",
   "files": [
-    "bs.darwin-x64.node"
+    "bsrs.darwin-x64.node"
   ],
   "license": "MIT",
   "engines": {
     "node": ">= 10"
-  }
+  },
+  "repository": "git@github.com:BrowserSync/bsrs.git"
 }
