@@ -26,24 +26,24 @@ switch (platform) {
   case 'android':
     switch (arch) {
       case 'arm64':
-        localFileExisted = existsSync(join(__dirname, 'bs.android-arm64.node'))
+        localFileExisted = existsSync(join(__dirname, 'bsrs.android-arm64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.android-arm64.node')
+            nativeBinding = require('./bsrs.android-arm64.node')
           } else {
-            nativeBinding = require('bs-android-arm64')
+            nativeBinding = require('bsrs-android-arm64')
           }
         } catch (e) {
           loadError = e
         }
         break
       case 'arm':
-        localFileExisted = existsSync(join(__dirname, 'bs.android-arm-eabi.node'))
+        localFileExisted = existsSync(join(__dirname, 'bsrs.android-arm-eabi.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.android-arm-eabi.node')
+            nativeBinding = require('./bsrs.android-arm-eabi.node')
           } else {
-            nativeBinding = require('bs-android-arm-eabi')
+            nativeBinding = require('bsrs-android-arm-eabi')
           }
         } catch (e) {
           loadError = e
@@ -57,13 +57,13 @@ switch (platform) {
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(
-          join(__dirname, 'bs.win32-x64-msvc.node')
+          join(__dirname, 'bsrs.win32-x64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.win32-x64-msvc.node')
+            nativeBinding = require('./bsrs.win32-x64-msvc.node')
           } else {
-            nativeBinding = require('bs-win32-x64-msvc')
+            nativeBinding = require('bsrs-win32-x64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -71,13 +71,13 @@ switch (platform) {
         break
       case 'ia32':
         localFileExisted = existsSync(
-          join(__dirname, 'bs.win32-ia32-msvc.node')
+          join(__dirname, 'bsrs.win32-ia32-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.win32-ia32-msvc.node')
+            nativeBinding = require('./bsrs.win32-ia32-msvc.node')
           } else {
-            nativeBinding = require('bs-win32-ia32-msvc')
+            nativeBinding = require('bsrs-win32-ia32-msvc')
           }
         } catch (e) {
           loadError = e
@@ -85,13 +85,13 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'bs.win32-arm64-msvc.node')
+          join(__dirname, 'bsrs.win32-arm64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.win32-arm64-msvc.node')
+            nativeBinding = require('./bsrs.win32-arm64-msvc.node')
           } else {
-            nativeBinding = require('bs-win32-arm64-msvc')
+            nativeBinding = require('bsrs-win32-arm64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -102,24 +102,24 @@ switch (platform) {
     }
     break
   case 'darwin':
-    localFileExisted = existsSync(join(__dirname, 'bs.darwin-universal.node'))
+    localFileExisted = existsSync(join(__dirname, 'bsrs.darwin-universal.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./bs.darwin-universal.node')
+        nativeBinding = require('./bsrs.darwin-universal.node')
       } else {
-        nativeBinding = require('bs-darwin-universal')
+        nativeBinding = require('bsrs-darwin-universal')
       }
       break
     } catch {}
     switch (arch) {
       case 'x64':
-        localFileExisted = existsSync(join(__dirname, 'bs.darwin-x64.node'))
+        localFileExisted = existsSync(join(__dirname, 'bsrs.darwin-x64.node'))
         console.log({localFileExisted, x64: true})
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.darwin-x64.node')
+            nativeBinding = require('./bsrs.darwin-x64.node')
           } else {
-            nativeBinding = require('bs-darwin-x64')
+            nativeBinding = require('bsrs-darwin-x64')
           }
         } catch (e) {
           loadError = e
@@ -127,14 +127,14 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'bs.darwin-arm64.node')
+          join(__dirname, 'bsrs.darwin-arm64.node')
         )
         console.log({localFileExisted, arm64: true})
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.darwin-arm64.node')
+            nativeBinding = require('./bsrs.darwin-arm64.node')
           } else {
-            nativeBinding = require('bs-darwin-arm64')
+            nativeBinding = require('bsrs-darwin-arm64')
           }
         } catch (e) {
           loadError = e
@@ -148,12 +148,12 @@ switch (platform) {
     if (arch !== 'x64') {
       throw new Error(`Unsupported architecture on FreeBSD: ${arch}`)
     }
-    localFileExisted = existsSync(join(__dirname, 'bs.freebsd-x64.node'))
+    localFileExisted = existsSync(join(__dirname, 'bsrs.freebsd-x64.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./bs.freebsd-x64.node')
+        nativeBinding = require('./bsrs.freebsd-x64.node')
       } else {
-        nativeBinding = require('bs-freebsd-x64')
+        nativeBinding = require('bsrs-freebsd-x64')
       }
     } catch (e) {
       loadError = e
@@ -164,26 +164,26 @@ switch (platform) {
       case 'x64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'bs.linux-x64-musl.node')
+            join(__dirname, 'bsrs.linux-x64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./bs.linux-x64-musl.node')
+              nativeBinding = require('./bsrs.linux-x64-musl.node')
             } else {
-              nativeBinding = require('bs-linux-x64-musl')
+              nativeBinding = require('bsrs-linux-x64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'bs.linux-x64-gnu.node')
+            join(__dirname, 'bsrs.linux-x64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./bs.linux-x64-gnu.node')
+              nativeBinding = require('./bsrs.linux-x64-gnu.node')
             } else {
-              nativeBinding = require('bs-linux-x64-gnu')
+              nativeBinding = require('bsrs-linux-x64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -193,26 +193,26 @@ switch (platform) {
       case 'arm64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'bs.linux-arm64-musl.node')
+            join(__dirname, 'bsrs.linux-arm64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./bs.linux-arm64-musl.node')
+              nativeBinding = require('./bsrs.linux-arm64-musl.node')
             } else {
-              nativeBinding = require('bs-linux-arm64-musl')
+              nativeBinding = require('bsrs-linux-arm64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'bs.linux-arm64-gnu.node')
+            join(__dirname, 'bsrs.linux-arm64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./bs.linux-arm64-gnu.node')
+              nativeBinding = require('./bsrs.linux-arm64-gnu.node')
             } else {
-              nativeBinding = require('bs-linux-arm64-gnu')
+              nativeBinding = require('bsrs-linux-arm64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -221,13 +221,13 @@ switch (platform) {
         break
       case 'arm':
         localFileExisted = existsSync(
-          join(__dirname, 'bs.linux-arm-gnueabihf.node')
+          join(__dirname, 'bsrs.linux-arm-gnueabihf.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./bs.linux-arm-gnueabihf.node')
+            nativeBinding = require('./bsrs.linux-arm-gnueabihf.node')
           } else {
-            nativeBinding = require('bs-linux-arm-gnueabihf')
+            nativeBinding = require('bsrs-linux-arm-gnueabihf')
           }
         } catch (e) {
           loadError = e
