@@ -22,11 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: macos-latest
-            target: x86_64-apple-darwin
-            build: |
-              yarn build
-              strip -x *.node
           - host: windows-latest
             build: yarn build
             target: x86_64-pc-windows-msvc
@@ -188,11 +183,6 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install
-      - name: Download macOS x64 artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: bindings-x86_64-apple-darwin
-          path: artifacts
       - name: Download macOS arm64 artifact
         uses: actions/download-artifact@v3
         with:
