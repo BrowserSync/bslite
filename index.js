@@ -31,7 +31,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.android-arm64.node')
           } else {
-            nativeBinding = require('bsrs-android-arm64')
+            nativeBinding = require('@browsersync/bsrs-android-arm64')
           }
         } catch (e) {
           loadError = e
@@ -43,7 +43,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.android-arm-eabi.node')
           } else {
-            nativeBinding = require('bsrs-android-arm-eabi')
+            nativeBinding = require('@browsersync/bsrs-android-arm-eabi')
           }
         } catch (e) {
           loadError = e
@@ -63,7 +63,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.win32-x64-msvc.node')
           } else {
-            nativeBinding = require('bsrs-win32-x64-msvc')
+            nativeBinding = require('@browsersync/bsrs-win32-x64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -77,7 +77,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.win32-ia32-msvc.node')
           } else {
-            nativeBinding = require('bsrs-win32-ia32-msvc')
+            nativeBinding = require('@browsersync/bsrs-win32-ia32-msvc')
           }
         } catch (e) {
           loadError = e
@@ -91,7 +91,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.win32-arm64-msvc.node')
           } else {
-            nativeBinding = require('bsrs-win32-arm64-msvc')
+            nativeBinding = require('@browsersync/bsrs-win32-arm64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -107,19 +107,18 @@ switch (platform) {
       if (localFileExisted) {
         nativeBinding = require('./bsrs.darwin-universal.node')
       } else {
-        nativeBinding = require('bsrs-darwin-universal')
+        nativeBinding = require('@browsersync/bsrs-darwin-universal')
       }
       break
     } catch {}
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(join(__dirname, 'bsrs.darwin-x64.node'))
-        console.log({localFileExisted, x64: true})
         try {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.darwin-x64.node')
           } else {
-            nativeBinding = require('bsrs-darwin-x64')
+            nativeBinding = require('@browsersync/bsrs-darwin-x64')
           }
         } catch (e) {
           loadError = e
@@ -129,12 +128,11 @@ switch (platform) {
         localFileExisted = existsSync(
           join(__dirname, 'bsrs.darwin-arm64.node')
         )
-        console.log({localFileExisted, arm64: true})
         try {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.darwin-arm64.node')
           } else {
-            nativeBinding = require('bsrs-darwin-arm64')
+            nativeBinding = require('@browsersync/bsrs-darwin-arm64')
           }
         } catch (e) {
           loadError = e
@@ -153,7 +151,7 @@ switch (platform) {
       if (localFileExisted) {
         nativeBinding = require('./bsrs.freebsd-x64.node')
       } else {
-        nativeBinding = require('bsrs-freebsd-x64')
+        nativeBinding = require('@browsersync/bsrs-freebsd-x64')
       }
     } catch (e) {
       loadError = e
@@ -170,7 +168,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./bsrs.linux-x64-musl.node')
             } else {
-              nativeBinding = require('bsrs-linux-x64-musl')
+              nativeBinding = require('@browsersync/bsrs-linux-x64-musl')
             }
           } catch (e) {
             loadError = e
@@ -183,7 +181,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./bsrs.linux-x64-gnu.node')
             } else {
-              nativeBinding = require('bsrs-linux-x64-gnu')
+              nativeBinding = require('@browsersync/bsrs-linux-x64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -199,7 +197,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./bsrs.linux-arm64-musl.node')
             } else {
-              nativeBinding = require('bsrs-linux-arm64-musl')
+              nativeBinding = require('@browsersync/bsrs-linux-arm64-musl')
             }
           } catch (e) {
             loadError = e
@@ -212,7 +210,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./bsrs.linux-arm64-gnu.node')
             } else {
-              nativeBinding = require('bsrs-linux-arm64-gnu')
+              nativeBinding = require('@browsersync/bsrs-linux-arm64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -227,7 +225,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./bsrs.linux-arm-gnueabihf.node')
           } else {
-            nativeBinding = require('bsrs-linux-arm-gnueabihf')
+            nativeBinding = require('@browsersync/bsrs-linux-arm-gnueabihf')
           }
         } catch (e) {
           loadError = e
