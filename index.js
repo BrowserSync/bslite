@@ -114,6 +114,7 @@ switch (platform) {
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(join(__dirname, 'bs.darwin-x64.node'))
+        console.log({localFileExisted, x64: true})
         try {
           if (localFileExisted) {
             nativeBinding = require('./bs.darwin-x64.node')
@@ -128,6 +129,7 @@ switch (platform) {
         localFileExisted = existsSync(
           join(__dirname, 'bs.darwin-arm64.node')
         )
+        console.log({localFileExisted, arm64: true})
         try {
           if (localFileExisted) {
             nativeBinding = require('./bs.darwin-arm64.node')
