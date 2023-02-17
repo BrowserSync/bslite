@@ -1,5 +1,5 @@
 {
-  "name": "@browsersync/bsrs-linux-x64-musl",
+  "name": "@browsersync/bslite-linux-x64-musl",
   "version": "0.0.1",
   "os": [
     "linux"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "bsrs.linux-x64-musl.node",
+  "main": "bslite.linux-x64-musl.node",
   "files": [
-    "bsrs.linux-x64-musl.node"
+    "bslite.linux-x64-musl.node"
   ],
   "license": "MIT",
   "engines": {

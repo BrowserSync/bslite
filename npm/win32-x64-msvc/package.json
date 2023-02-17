@@ -1,5 +1,5 @@
 {
-  "name": "@browsersync/bsrs-win32-x64-msvc",
+  "name": "@browsersync/bslite-win32-x64-msvc",
   "version": "0.0.1",
   "os": [
     "win32"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "bsrs.win32-x64-msvc.node",
+  "main": "bslite.win32-x64-msvc.node",
   "files": [
-    "bsrs.win32-x64-msvc.node"
+    "bslite.win32-x64-msvc.node"
   ],
   "license": "MIT",
   "engines": {

@@ -1,5 +1,5 @@
 {
-  "name": "@browsersync/bsrs-darwin-x64",
+  "name": "@browsersync/bslite-darwin-x64",
   "version": "0.0.1",
   "os": [
     "darwin"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "bsrs.darwin-x64.node",
+  "main": "bslite.darwin-x64.node",
   "files": [
-    "bsrs.darwin-x64.node"
+    "bslite.darwin-x64.node"
   ],
   "license": "MIT",
   "engines": {

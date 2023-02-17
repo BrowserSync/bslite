@@ -5,9 +5,9 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@browsersync/bsrs@workspace:.":
+"@browsersync/bslite@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@browsersync/bsrs@workspace:."
+  resolution: "@browsersync/bslite@workspace:."
   dependencies:
     "@napi-rs/cli": ^2.14.8
     ava: ^5.1.1
