@@ -1,0 +1,12 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "hello-world.js",
+  "dependencies": {
+
+  },
+  "scripts": {
+    "start": "node hello-world.js"
+  }
+}

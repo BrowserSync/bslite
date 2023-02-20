@@ -26,12 +26,15 @@
   },
   "scripts": {
     "artifacts": "napi artifacts",
-    "build": "napi build --cargo-name bslite --platform --release",
-    "build:debug": "napi build --cargo-name bslite --platform",
+    "clean": "rm -rf $TMPDIR*bslite*",
+    "build": "npm run clean && touch bslite/src/lib.rs && napi build --cargo-name bslite --platform --release",
+    "build:debug": "npm run clean && napi build --cargo-name bslite --platform",
     "prepublishOnly": "napi prepublish -t npm",
     "test": "ava",
     "universal": "napi universal",
-    "version": "napi version"
+    "version": "napi version",
+    "dd": "echo $TYPE_DEF_TMP_PATH",
+    "e2e": "npm run build; cd examples/hello-world && npm start"
   },
   "packageManager": "yarn@3.4.1",
   "repository": "git@github.com:BrowserSync/bsrs.git"

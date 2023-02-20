@@ -1,0 +1,12 @@
+[package]
+name = "bs_core"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web.workspace = true
+actix-rt.workspace = true
+env_logger.workspace = true
+log.workspace = true

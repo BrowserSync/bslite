@@ -1,2 +1,11 @@
 [workspace]
-members = ["bslite"]
+members = ["bslite", "bs_core"]
+
+[workspace.dependencies]
+actix-web = "4.3.0"
+actix-rt = "2.8.0"
+env_logger = "0.10.0"
+tokio = "1.25.0"
+serde = { version = "1.0.152", features = ["derive"] }
+serde_json = { version = "1.0.93" }
+log = "0.4.17"
