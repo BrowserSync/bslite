@@ -3,7 +3,7 @@
 #[macro_use]
 extern crate napi_derive;
 
-use napi::threadsafe_function::{ThreadsafeFunction, ThreadsafeFunctionCallMode};
+use napi::threadsafe_function::{ThreadsafeFunction};
 use napi::tokio::join;
 
 use napi::bindgen_prelude::*;
@@ -14,12 +14,21 @@ enum Event {
 }
 
 #[napi]
-async fn start(_a: i32, func: ThreadsafeFunction<String>) -> Result<i32> {
+async fn start(_a: i32, _func: ThreadsafeFunction<String>) -> Result<i32> {
   let handle = spawn(async move {
-    let as_json = serde_json::to_string_pretty(&Event::BindingTo(("127.0.0.1".into(), 8080)))
-      .expect("can create json for test");
-    func.call(Ok(as_json), ThreadsafeFunctionCallMode::NonBlocking);
-    let server_runner = bs_core::get_server().unwrap();
+    // let as_json = serde_json::to_string_pretty(&Event::BindingTo(("127.0.0.1".into(), 8080)))
+    //   .expect("can create json for test");
+    let server = bs_core::Server {
+      bind_address: bs_core::BindAddressOptions {
+        port_preference: Some(3210),
+        host: None,
+      },
+    };
+
+    // func.call(Ok(as_json), ThreadsafeFunctionCallMode::NonBlocking);
+
+    let server_runner = bs_core::get_server(server).unwrap();
+
     // let h2 = spawn(async move {
     //   let _ = tokio::signal::ctrl_c().await;
     //   println!("stopping because asked to...");
