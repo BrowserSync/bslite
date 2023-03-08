@@ -14,7 +14,7 @@ enum Event {
 }
 
 #[napi]
-async fn start(_a: i32, _func: ThreadsafeFunction<String>) -> Result<i32> {
+async fn start(_a: i32 /*_func: ThreadsafeFunction<String>*/) -> Result<i32> {
   let handle = spawn(async move {
     // let as_json = serde_json::to_string_pretty(&Event::BindingTo(("127.0.0.1".into(), 8080)))
     //   .expect("can create json for test");
