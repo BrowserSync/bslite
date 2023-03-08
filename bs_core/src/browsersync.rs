@@ -1,4 +1,4 @@
-use crate::address::BindAddressOptions;
+use crate::bind_address::BindAddressOptions;
 
 pub struct Browsersync {
   pub servers: Vec<Server>,

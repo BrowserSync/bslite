@@ -1,10 +1,10 @@
-pub mod address;
+pub mod bind_address;
 pub mod browsersync;
 
-pub use crate::address::{BindAddress, BindAddressOptions, BindHostOptions};
+pub use crate::bind_address::{BindAddress, BindAddressOptions, BindHostOptions};
 pub use crate::browsersync::Server;
 use actix_web::{middleware, web, App, HttpRequest, HttpServer};
-use std::net::{TcpListener};
+use std::net::TcpListener;
 
 async fn index(req: HttpRequest) -> &'static str {
   println!("REQ: {req:?}");
@@ -63,7 +63,7 @@ pub fn get_bind_addresses(Server { bind_address }: &Server) -> Result<BindAddres
 
 #[cfg(test)]
 mod tests {
-  use crate::address::{BindAddressOptions, BindHostOptions};
+  use crate::bind_address::{BindAddressOptions, BindHostOptions};
   use actix_web::{body::to_bytes, dev::Service, http, test, web, App, Error};
 
   use super::*;

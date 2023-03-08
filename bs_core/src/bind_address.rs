@@ -3,6 +3,28 @@ use std::fmt::{Display, Formatter};
 use std::net::SocketAddr;
 
 #[derive(Debug)]
+pub struct BindAddress {
+  pub port: u16,
+  pub ip: String,
+}
+
+impl BindAddress {
+  pub fn from_socket_addr(sa: impl Into<SocketAddr>) -> Self {
+    let add = sa.into();
+    Self {
+      port: add.port(),
+      ip: add.ip().to_string(),
+    }
+  }
+}
+
+impl Display for BindAddress {
+  fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    write!(f, "http://{}:{}", self.ip, self.port)
+  }
+}
+
+#[derive(Debug)]
 pub enum BindHostOptions {
   LocalHost,
   AllInterfaces,
@@ -21,28 +43,6 @@ impl BindAddressOptions {
       Some(BindHostOptions::AllInterfaces) => "0.0.0.0",
     }
     .to_string()
-  }
-}
-
-#[derive(Debug)]
-pub struct BindAddress {
-  pub port: u16,
-  pub ip: String,
-}
-
-impl Display for BindAddress {
-  fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-    write!(f, "http://{}:{}", self.ip, self.port)
-  }
-}
-
-impl BindAddress {
-  pub fn from_socket_addr(sa: impl Into<SocketAddr>) -> Self {
-    let add = sa.into();
-    Self {
-      port: add.port(),
-      ip: add.ip().to_string(),
-    }
   }
 }
 
