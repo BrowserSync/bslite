@@ -26,8 +26,11 @@
   "ava": {
     "timeout": "3m"
   },
+  "bin": {
+    "bslite": "./bin.js"
+  },
   "engines": {
-    "node": ">= 10"
+    "node": ">= 18"
   },
   "scripts": {
     "artifacts": "napi artifacts",
