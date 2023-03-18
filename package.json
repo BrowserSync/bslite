@@ -44,6 +44,5 @@
     "dd": "echo $TYPE_DEF_TMP_PATH",
     "e2e": "npm run build; cd examples/hello-world && npm start"
   },
-  "packageManager": "yarn@3.4.1",
   "repository": "git@github.com:BrowserSync/bsrs.git"
 }
