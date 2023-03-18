@@ -42,7 +42,7 @@ jobs:
         with:
           node-version: 18
           check-latest: true
-          cache: yarn
+          cache: npm
       - name: Install
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
@@ -79,7 +79,7 @@ jobs:
         with:
           node-version: 18
           check-latest: true
-          cache: yarn
+          cache: npm
           architecture: x86
       - name: Build in docker
         uses: addnab/docker-run-action@v3
@@ -119,7 +119,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
-          cache: yarn
+          cache: npm
       - name: Install dependencies
         run: npm install
       - name: Download artifacts
@@ -144,7 +144,7 @@ jobs:
         with:
           node-version: 18
           check-latest: true
-          cache: yarn
+          cache: npm
       - name: Install dependencies
         run: npm install
       - name: Download all artifacts
