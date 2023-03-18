@@ -11,6 +11,8 @@ __metadata:
   dependencies:
     "@napi-rs/cli": ^2.14.8
     ava: ^5.1.1
+  bin:
+    bslite: ./bin.js
   languageName: unknown
   linkType: soft
 
