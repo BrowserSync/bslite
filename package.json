@@ -13,11 +13,6 @@
       ]
     }
   },
-  "files": [
-    "index.js",
-    "index.d.js",
-    "bin.js"
-  ],
   "license": "MIT",
   "devDependencies": {
     "@napi-rs/cli": "^2.14.8",
