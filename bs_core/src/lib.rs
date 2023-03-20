@@ -3,6 +3,8 @@ pub mod browsersync;
 
 pub use crate::bind_address::{BindAddress, BindAddressOptions, BindHostOptions};
 pub use crate::browsersync::Server;
+use actix_files::Files;
+
 use actix_web::{middleware, web, App, HttpRequest, HttpServer};
 use std::net::TcpListener;
 
@@ -22,8 +24,9 @@ pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
     HttpServer::new(|| {
       App::new()
         // enable logger
-        .wrap(middleware::Logger::default())
+        .service(Files::new("/", ".").index_file("index.html"))
         .service(web::resource("/index.html").to(|| async { "Hello world!" }))
+        .wrap(middleware::Logger::default())
         .service(web::resource("/").to(index))
     })
     .disable_signals()

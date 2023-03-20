@@ -3,7 +3,7 @@
 #[macro_use]
 extern crate napi_derive;
 
-use napi::threadsafe_function::ThreadsafeFunction;
+
 use napi::tokio::join;
 
 use napi::bindgen_prelude::*;
