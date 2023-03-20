@@ -7,6 +7,7 @@ use actix_files::Files;
 
 use actix_web::{middleware, web, App, HttpRequest, HttpServer};
 use std::net::TcpListener;
+use std::path::PathBuf;
 
 async fn index(req: HttpRequest) -> &'static str {
   println!("REQ: {req:?}");
@@ -16,18 +17,43 @@ async fn index(req: HttpRequest) -> &'static str {
 pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
   std::env::set_var("RUST_LOG", "bs_core=debug");
   env_logger::init();
+  dbg!(&server);
   let bind_address = get_bind_addresses(&server)?;
 
   println!("binding to {bind_address}");
 
   Ok(
-    HttpServer::new(|| {
-      App::new()
+    HttpServer::new(move || {
+      let mut app = App::new()
         // enable logger
-        .service(Files::new("/", ".").index_file("index.html"))
-        .service(web::resource("/index.html").to(|| async { "Hello world!" }))
-        .wrap(middleware::Logger::default())
-        .service(web::resource("/").to(index))
+        .wrap(middleware::Logger::default());
+      // .wrap_fn(|req, srv| {
+      //     let fut = srv.call(req);
+      //     async {
+      //         let mut res = fut.await?;
+      //         dbg!(&res.headers());
+      //         // res.headers_mut()
+      //         //     .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+      //         Ok(res)
+      //     }
+      // })
+      // .service(Files::new("public", "./assets")
+      //     .guard(fn_guard(|f| {
+      //       dbg!(&f);
+      //       false
+      //     }))
+      // )
+      // .service(Files::new("public", "./assets"))
+      // .service(Files::new("public", "./assets2"))
+
+      for dir in &server.dirs {
+        app = app.service(Files::new("/", dir).index_file("index.html"));
+      }
+
+      app = app.service(Files::new("/", PathBuf::from(".")).index_file("index.html"));
+      app = app.service(web::resource("/index.html").to(|| async { "Hello world!" }));
+
+      app
     })
     .disable_signals()
     .bind((bind_address.ip.as_str(), bind_address.port))?
@@ -49,7 +75,9 @@ pub fn serve() -> Result<(), String> {
   })
 }
 
-pub fn get_bind_addresses(Server { bind_address }: &Server) -> Result<BindAddress, std::io::Error> {
+pub fn get_bind_addresses(
+  Server { bind_address, .. }: &Server,
+) -> Result<BindAddress, std::io::Error> {
   let as_host = bind_address.ip();
   let check = |num| TcpListener::bind((as_host.as_str(), num));
 
@@ -94,6 +122,7 @@ mod tests {
         port_preference: None,
         host: Some(BindHostOptions::LocalHost),
       },
+      dirs: vec![],
     };
     let ap = get_bind_addresses(&s);
     println!("{:?}", ap);
