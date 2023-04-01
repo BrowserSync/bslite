@@ -11,3 +11,6 @@ actix-web.workspace = true
 actix-rt.workspace = true
 env_logger.workspace = true
 log.workspace = true
+serde_json.workspace = true
+serde.workspace = true
+clap.workspace = true

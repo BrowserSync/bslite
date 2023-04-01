@@ -24,19 +24,19 @@ impl Display for BindAddress {
   }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum BindHostOptions {
   LocalHost,
   AllInterfaces,
 }
 
-#[derive(Debug)]
-pub struct BindAddressOptions {
-  pub port_preference: Option<u16>,
+#[derive(Debug, Clone)]
+pub struct BindOptions {
+  pub port: Option<u16>,
   pub host: Option<BindHostOptions>,
 }
 
-impl BindAddressOptions {
+impl BindOptions {
   pub fn ip(&self) -> String {
     match self.host {
       None | Some(BindHostOptions::LocalHost) => "127.0.0.1",
@@ -46,11 +46,11 @@ impl BindAddressOptions {
   }
 }
 
-impl Default for BindAddressOptions {
+impl Default for BindOptions {
   fn default() -> Self {
     Self {
       host: Some(BindHostOptions::LocalHost),
-      port_preference: Some(3210),
+      port: Some(3210),
     }
   }
 }

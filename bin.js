@@ -2,4 +2,4 @@
 console.log('from cli package');
 
 const { start } = require("./index.js");
-start(process.argv.slice(2)).catch(console.error);
+start(process.argv.slice(1)).catch(console.error);

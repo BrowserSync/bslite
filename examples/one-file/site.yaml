@@ -1,0 +1,14 @@
+servers:
+  server_a:
+    routes:
+      - path: /
+        content: |
+          <iframe src="{{servers.server_b}}frame.html" />
+  server_b:
+    routes:
+      - path: /frame.html
+        headers:
+          X-Frame-Options: SAMEORIGIN
+          Content-Security-Policy: frame-ancestors 'self'
+        content: |
+          <h2>Hello from frame</h2>

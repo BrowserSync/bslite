@@ -1,13 +1,18 @@
 pub mod bind_address;
 pub mod browsersync;
+pub mod cli;
+pub mod server;
+pub mod static_route;
 
-pub use crate::bind_address::{BindAddress, BindAddressOptions, BindHostOptions};
-pub use crate::browsersync::Server;
+pub use crate::bind_address::{BindAddress, BindHostOptions, BindOptions};
 use actix_files::Files;
+pub use server::Server;
 
+use crate::static_route::{DirPath, RouteResolver};
 use actix_web::{middleware, web, App, HttpRequest, HttpServer};
 use std::net::TcpListener;
 use std::path::PathBuf;
+
 
 async fn index(req: HttpRequest) -> &'static str {
   println!("REQ: {req:?}");
@@ -17,7 +22,6 @@ async fn index(req: HttpRequest) -> &'static str {
 pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
   std::env::set_var("RUST_LOG", "bs_core=debug");
   env_logger::init();
-  dbg!(&server);
   let bind_address = get_bind_addresses(&server)?;
 
   println!("binding to {bind_address}");
@@ -46,8 +50,14 @@ pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
       // .service(Files::new("public", "./assets"))
       // .service(Files::new("public", "./assets2"))
 
-      for dir in &server.dirs {
-        app = app.service(Files::new("/", dir).index_file("index.html"));
+      for route in &server.routes {
+        match &route.resolve {
+          RouteResolver::RawString(_) => {}
+          RouteResolver::FilePath(_) => {}
+          RouteResolver::DirPath(DirPath { dir }) => {
+            app = app.service(Files::new(&route.path, dir).index_file("index.html"));
+          }
+        }
       }
 
       app = app.service(Files::new("/", PathBuf::from(".")).index_file("index.html"));
@@ -61,27 +71,15 @@ pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
   )
 }
 
-pub fn serve() -> Result<(), String> {
-  actix_rt::System::new().block_on(async move {
-    match get_server(Default::default()).unwrap().await {
-      Ok(_) => {
-        println!("all done");
-      }
-      Err(_) => {
-        println!("oops");
-      }
-    };
-    Ok(())
-  })
-}
-
 pub fn get_bind_addresses(
-  Server { bind_address, .. }: &Server,
+  Server {
+    bind: bind_address, ..
+  }: &Server,
 ) -> Result<BindAddress, std::io::Error> {
   let as_host = bind_address.ip();
   let check = |num| TcpListener::bind((as_host.as_str(), num));
 
-  let port_choice = match bind_address.port_preference {
+  let port_choice = match bind_address.port {
     None => check(0),
     // if a preference was given, use it - or default to 0 for 'any'
     Some(port) => check(port).or_else(|_| check(0)),
@@ -94,7 +92,7 @@ pub fn get_bind_addresses(
 
 #[cfg(test)]
 mod tests {
-  use crate::bind_address::{BindAddressOptions, BindHostOptions};
+  use crate::bind_address::{BindHostOptions, BindOptions};
   use actix_web::{body::to_bytes, dev::Service, http, test, web, App, Error};
 
   use super::*;
@@ -118,11 +116,11 @@ mod tests {
   #[test]
   async fn test_port() {
     let s = Server {
-      bind_address: BindAddressOptions {
-        port_preference: None,
+      bind: BindOptions {
+        port: None,
         host: Some(BindHostOptions::LocalHost),
       },
-      dirs: vec![],
+      routes: vec![],
     };
     let ap = get_bind_addresses(&s);
     println!("{:?}", ap);

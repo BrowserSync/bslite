@@ -3,10 +3,13 @@
 #[macro_use]
 extern crate napi_derive;
 
-use napi::tokio::join;
-use std::path::PathBuf;
-
+use bs_core::browsersync::Browsersync;
+use bs_core::cli::Cli;
+use clap::Parser;
 use napi::bindgen_prelude::*;
+use napi::tokio::join;
+
+
 
 #[derive(Debug, serde::Serialize)]
 enum Event {
@@ -19,12 +22,18 @@ async fn start(args: Vec<String> /*_func: ThreadsafeFunction<String>*/) -> Resul
     // let as_json = serde_json::to_string_pretty(&Event::BindingTo(("127.0.0.1".into(), 8080)))
     //   .expect("can create json for test");
 
-    let mut server = bs_core::Server::default();
-    let as_bufs = args.iter().map(PathBuf::from).collect::<Vec<_>>();
-    server.dirs = as_bufs;
+    let cli = Cli::try_parse_from(&args);
+    let Ok(cli) = cli else {
+      let e = cli.unwrap_err();
+      eprintln!("{}", e);
+      return;
+    };
 
-    // func.call(Ok(as_json), ThreadsafeFunctionCallMode::NonBlocking);
+    dbg!(&args);
+    dbg!(&cli);
 
+    let bs = Browsersync::from(cli);
+    let server = bs.base_server().clone();
     let server_runner = bs_core::get_server(server).unwrap();
 
     // let h2 = spawn(async move {

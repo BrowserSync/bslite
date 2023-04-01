@@ -34,6 +34,7 @@
     "build:debug": "npm run clean && napi build --cargo-name bslite --platform",
     "prepublishOnly": "napi prepublish -t npm",
     "test": "ava",
+    "pretest": "npm run build",
     "universal": "napi universal",
     "version": "napi version",
     "dd": "echo $TYPE_DEF_TMP_PATH",
