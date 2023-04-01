@@ -1,14 +1,23 @@
 servers:
   server_a:
     routes:
-      - path: /
-        content: |
-          <iframe src="{{servers.server_b}}frame.html" />
-  server_b:
-    routes:
-      - path: /frame.html
+      - path: /testing.html
+        raw: |
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="UTF-8">
+                       <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                                   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                       <title>Document</title>
+          </head>
+          <body>
+              <iframe src="/iframe.html" />
+          </body>
+          </html>
+      - path: /iframe.html
         headers:
           X-Frame-Options: SAMEORIGIN
           Content-Security-Policy: frame-ancestors 'self'
-        content: |
-          <h2>Hello from frame</h2>
+        raw: |
+          <h2> 🙈 Hello from iframe.html</h2>

@@ -8,27 +8,51 @@ pub use crate::bind_address::{BindAddress, BindHostOptions, BindOptions};
 use actix_files::Files;
 pub use server::Server;
 
-use crate::static_route::{DirPath, RouteResolver};
-use actix_web::{middleware, web, App, HttpRequest, HttpServer};
+use crate::static_route::{DirPath, RawString, RouteResolver, StaticRoute};
+use actix_web::web::Data;
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 use std::net::TcpListener;
-use std::path::PathBuf;
 
+use std::sync::Arc;
 
 async fn index(req: HttpRequest) -> &'static str {
   println!("REQ: {req:?}");
   "Hello world!"
 }
 
-pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
+async fn raw_reader(server: Data<Arc<Server>>, req: HttpRequest) -> HttpResponse {
+  // dbg!(req.match_info());
+  // dbg!(req.match_name());
+  // dbg!(req.match_pattern());
+
+  let route = server
+    .get_ref()
+    .routes
+    .iter()
+    .find(|s| s.path == req.match_pattern().unwrap());
+
+  let route = route.unwrap();
+
+  match &route.resolve {
+    RouteResolver::RawString(RawString { raw }) => HttpResponse::Ok().body(raw.clone()),
+    RouteResolver::FilePath(_) => HttpResponse::NotImplemented().body("n"),
+    RouteResolver::DirPath(_) => HttpResponse::NotImplemented().body("n"),
+  }
+}
+
+pub fn get_server(
+  server: Server,
+  routes: Vec<StaticRoute>,
+) -> std::io::Result<actix_web::dev::Server> {
   std::env::set_var("RUST_LOG", "bs_core=debug");
   env_logger::init();
   let bind_address = get_bind_addresses(&server)?;
-
-  println!("binding to {bind_address}");
+  let route_arc = Data::new(Arc::new(server.clone()));
 
   Ok(
     HttpServer::new(move || {
       let mut app = App::new()
+        .app_data(route_arc.clone())
         // enable logger
         .wrap(middleware::Logger::default());
       // .wrap_fn(|req, srv| {
@@ -50,9 +74,11 @@ pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
       // .service(Files::new("public", "./assets"))
       // .service(Files::new("public", "./assets2"))
 
-      for route in &server.routes {
+      for route in server.routes.iter().chain(routes.iter()) {
         match &route.resolve {
-          RouteResolver::RawString(_) => {}
+          RouteResolver::RawString(RawString { .. }) => {
+            app = app.service(web::resource(&route.path).route(web::route().to(raw_reader)));
+          }
           RouteResolver::FilePath(_) => {}
           RouteResolver::DirPath(DirPath { dir }) => {
             app = app.service(Files::new(&route.path, dir).index_file("index.html"));
@@ -60,8 +86,7 @@ pub fn get_server(server: Server) -> std::io::Result<actix_web::dev::Server> {
         }
       }
 
-      app = app.service(Files::new("/", PathBuf::from(".")).index_file("index.html"));
-      app = app.service(web::resource("/index.html").to(|| async { "Hello world!" }));
+      // app = app.service(Files::new("/", PathBuf::from(".")).index_file("index.html"));
 
       app
     })

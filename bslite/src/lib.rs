@@ -8,8 +8,7 @@ use bs_core::cli::Cli;
 use clap::Parser;
 use napi::bindgen_prelude::*;
 use napi::tokio::join;
-
-
+use std::env::current_dir;
 
 #[derive(Debug, serde::Serialize)]
 enum Event {
@@ -21,7 +20,7 @@ async fn start(args: Vec<String> /*_func: ThreadsafeFunction<String>*/) -> Resul
   let handle = spawn(async move {
     // let as_json = serde_json::to_string_pretty(&Event::BindingTo(("127.0.0.1".into(), 8080)))
     //   .expect("can create json for test");
-
+    let cwd = current_dir().expect("must access current DIR");
     let cli = Cli::try_parse_from(&args);
     let Ok(cli) = cli else {
       let e = cli.unwrap_err();
@@ -32,15 +31,9 @@ async fn start(args: Vec<String> /*_func: ThreadsafeFunction<String>*/) -> Resul
     dbg!(&args);
     dbg!(&cli);
 
-    let bs = Browsersync::from(cli);
+    let bs = Browsersync::from_cli(cli, cwd);
     let server = bs.base_server().clone();
-    let server_runner = bs_core::get_server(server).unwrap();
-
-    // let h2 = spawn(async move {
-    //   let _ = tokio::signal::ctrl_c().await;
-    //   println!("stopping because asked to...");
-    //   let l = clone.lock().unwrap();
-    // });
+    let server_runner = bs_core::get_server(server, bs.routes).unwrap();
 
     match server_runner.await {
       Ok(_server) => {

@@ -14,13 +14,16 @@ impl StaticRoute {
       resolve: RouteResolver::FilePath(FilePath { file: file.into() }),
     }
   }
-}
-
-impl StaticRoute {
   pub fn dir(path: impl Into<String>, dir: impl Into<PathBuf>) -> Self {
     Self {
       path: path.into(),
       resolve: RouteResolver::DirPath(DirPath { dir: dir.into() }),
+    }
+  }
+  pub fn raw(path: impl Into<String>, raw: impl Into<String>) -> Self {
+    Self {
+      path: path.into(),
+      resolve: RouteResolver::RawString(RawString { raw: raw.into() }),
     }
   }
 }
@@ -35,7 +38,7 @@ pub enum RouteResolver {
 
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]
 pub struct RawString {
-  raw: String,
+  pub raw: String,
 }
 
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]

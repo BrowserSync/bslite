@@ -24,13 +24,13 @@ impl Display for BindAddress {
   }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Deserialize)]
 pub enum BindHostOptions {
   LocalHost,
   AllInterfaces,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Deserialize)]
 pub struct BindOptions {
   pub port: Option<u16>,
   pub host: Option<BindHostOptions>,
