@@ -18,7 +18,7 @@ servers:
       - path: /iframe.html
         headers:
           X-Frame-Options: SAMEORIGIN
-          Content-Security-Policy: frame-ancestors 'self'
+          Content-Security-Policy: frame-ancestors https://example.com
         raw: |
           <h2> 🙈 Hello from iframe.html</h2>
 #      - path: /

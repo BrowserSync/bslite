@@ -28,7 +28,10 @@ impl StaticRoute {
   pub fn raw(path: impl Into<String>, raw: impl Into<String>) -> Self {
     Self {
       path: path.into(),
-      resolve: RouteResolver::RawString(RawString { raw: raw.into() }),
+      resolve: RouteResolver::RawString(RawString {
+        raw: raw.into(),
+        headers: Default::default(),
+      }),
     }
   }
 }
@@ -44,7 +47,7 @@ pub enum RouteResolver {
 impl Display for RouteResolver {
   fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
     let string = match self {
-      RouteResolver::RawString(RawString { raw }) => {
+      RouteResolver::RawString(RawString { raw, .. }) => {
         format!("RouteResolver::RawString {}", raw.bytes().len())
       }
       RouteResolver::FilePath(FilePath { file, headers }) => {
@@ -61,6 +64,8 @@ impl Display for RouteResolver {
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]
 pub struct RawString {
   pub raw: String,
+  #[serde(default)]
+  pub headers: BTreeMap<String, String>,
 }
 
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]
@@ -98,6 +103,7 @@ mod tests {
       path: String::from("/"),
       resolve: RouteResolver::RawString(RawString {
         raw: String::from("haha"),
+        headers: Default::default(),
       }),
     };
     let json = r#"

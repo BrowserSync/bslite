@@ -31,7 +31,17 @@ async fn raw_reader(server: Data<Arc<BsServer>>, req: HttpRequest) -> HttpRespon
   let route = route.unwrap();
 
   match &route.resolve {
-    RouteResolver::RawString(RawString { raw }) => HttpResponse::Ok().body(raw.clone()),
+    RouteResolver::RawString(RawString { raw, headers }) => {
+      let mut res = HttpResponse::Ok().body(raw.clone());
+      let h = res.headers_mut();
+      for (k, v) in headers.iter() {
+        h.append(
+          HeaderName::from_bytes(k.as_bytes()).unwrap(),
+          HeaderValue::from_bytes(v.as_bytes()).unwrap(),
+        );
+      }
+      res
+    }
     RouteResolver::FilePath(FilePath { headers, file }) => {
       let h_m = Box::new(headers.clone());
       let named_file = NamedFile::open_async(file).await.unwrap();
