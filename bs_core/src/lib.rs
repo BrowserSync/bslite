@@ -34,6 +34,7 @@ async fn raw_reader(server: Data<Arc<BsServer>>, req: HttpRequest) -> HttpRespon
     RouteResolver::RawString(RawString { raw, headers }) => {
       let mut res = HttpResponse::Ok().body(raw.clone());
       let h = res.headers_mut();
+      // todo: append mime-type headers here
       for (k, v) in headers.iter() {
         h.append(
           HeaderName::from_bytes(k.as_bytes()).unwrap(),
@@ -47,6 +48,7 @@ async fn raw_reader(server: Data<Arc<BsServer>>, req: HttpRequest) -> HttpRespon
       let named_file = NamedFile::open_async(file).await.unwrap();
       let mut res = named_file.into_response(&req);
       let h = res.headers_mut();
+      // todo: append mime-type headers here
       for (k, v) in h_m.iter() {
         h.append(
           HeaderName::from_bytes(k.as_bytes()).unwrap(),
@@ -54,7 +56,6 @@ async fn raw_reader(server: Data<Arc<BsServer>>, req: HttpRequest) -> HttpRespon
         );
       }
       res
-      // HttpResponse::NotImplemented().body("n")
     }
     RouteResolver::DirPath(_) => HttpResponse::NotImplemented().body("n"),
   }

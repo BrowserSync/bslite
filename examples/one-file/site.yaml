@@ -1,7 +1,7 @@
 servers:
   server_a:
     routes:
-      - path: /testing.html
+      - path: /
         raw: |
           <!doctype html>
           <html lang="en">
@@ -10,23 +10,32 @@ servers:
                        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
                                    <meta http-equiv="X-UA-Compatible" content="ie=edge">
                        <title>Document</title>
+            <link href="styles.css" rel="stylesheet" />
           </head>
           <body>
-              <iframe src="/iframe.html" />
+              <iframe src="/iframe.html"></iframe>
+              <script src="/js.js" type=module></script>
           </body>
           </html>
+      - path: /js.js
+        raw: |
+          import a from "b.js"
+      - path: /b.js
+        raw: |
+          console.log(import.meta)
       - path: /iframe.html
         headers:
           X-Frame-Options: SAMEORIGIN
-          Content-Security-Policy: frame-ancestors https://example.com
+          Content-Security-Policy: frame-ancestors 'self'
         raw: |
           <h2> 🙈 Hello from iframe.html</h2>
-#      - path: /
-#        dir: ./
-      - path: /haha.css
-        headers:
-          shane: "kittens"
-          sally: "other"
-        file: ./style.css
+      #      - path: /
+      #        dir: ./
+      - path: /styles.css
+        raw: |
+          @import url("other.css");
+      - path: /other.css
+        raw: |
+          body { background: red }
 #      - path: /
 #        dir: ./
