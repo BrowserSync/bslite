@@ -33,9 +33,16 @@ async fn start(args: Vec<String> /*_func: ThreadsafeFunction<String>*/) -> Resul
 
     let bs = Browsersync::from_cli(cli, cwd);
     let server = bs.base_server().clone();
-    let server_runner = bs_core::get_server(server, bs.routes).unwrap();
+    let routes = server.routes.clone();
+    let (actix_server, bind_address) = bs_core::get_server(server, bs.routes).unwrap();
 
-    match server_runner.await {
+    for sr in routes {
+      println!("{} : {}", sr.path, sr.resolve);
+    }
+
+    println!("{bind_address}");
+
+    match actix_server.await {
       Ok(_server) => {
         println!("server stopped all done");
       }

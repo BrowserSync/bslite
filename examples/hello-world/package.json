@@ -7,6 +7,6 @@
 
   },
   "scripts": {
-    "start": "node hello-world.js"
+    "start": "node hello-world.js ../site.yaml"
   }
 }

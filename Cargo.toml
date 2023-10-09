@@ -1,14 +1,16 @@
 [workspace]
-members = ["bslite", "bs_core"]
+members = ["bslite", "bs_core", "bslite-rs"]
 
 [workspace.dependencies]
 actix-files = "0.6.2"
 actix-web = "4.3.1"
 actix-rt = "2.8.0"
+actix-router = "0.5.1"
 clap = { version = "4.1.11", features = ["derive"] }
 env_logger = "0.10.0"
-tokio = "1.26.0"
+tokio = { version = "1.33.0", features = ["full"] }
 serde = { version = "1.0.158", features = ["derive"] }
 serde_json = { version = "1.0.94" }
 serde_yaml = { version = "0.9.19" }
 log = "0.4.17"
+anyhow = "1.0.75"

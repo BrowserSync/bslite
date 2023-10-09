@@ -5,22 +5,19 @@ pub mod server;
 pub mod static_route;
 
 pub use crate::bind_address::{BindAddress, BindHostOptions, BindOptions};
-use actix_files::Files;
-pub use server::Server;
+use actix_files::{Files, NamedFile};
+pub use server::BsServer;
 
-use crate::static_route::{DirPath, RawString, RouteResolver, StaticRoute};
+use crate::static_route::{DirPath, FilePath, RawString, RouteResolver, StaticRoute};
 use actix_web::web::Data;
-use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use std::net::TcpListener;
 
+use actix_web::http::header::{HeaderName, HeaderValue};
+use actix_web::http::Method;
 use std::sync::Arc;
 
-async fn index(req: HttpRequest) -> &'static str {
-  println!("REQ: {req:?}");
-  "Hello world!"
-}
-
-async fn raw_reader(server: Data<Arc<Server>>, req: HttpRequest) -> HttpResponse {
+async fn raw_reader(server: Data<Arc<BsServer>>, req: HttpRequest) -> HttpResponse {
   // dbg!(req.match_info());
   // dbg!(req.match_name());
   // dbg!(req.match_pattern());
@@ -35,21 +32,34 @@ async fn raw_reader(server: Data<Arc<Server>>, req: HttpRequest) -> HttpResponse
 
   match &route.resolve {
     RouteResolver::RawString(RawString { raw }) => HttpResponse::Ok().body(raw.clone()),
-    RouteResolver::FilePath(_) => HttpResponse::NotImplemented().body("n"),
+    RouteResolver::FilePath(FilePath { headers, file }) => {
+      let h_m = Box::new(headers.clone());
+      let named_file = NamedFile::open_async(file).await.unwrap();
+      let mut res = named_file.into_response(&req);
+      let h = res.headers_mut();
+      for (k, v) in h_m.iter() {
+        h.append(
+          HeaderName::from_bytes(k.as_bytes()).unwrap(),
+          HeaderValue::from_bytes(v.as_bytes()).unwrap(),
+        );
+      }
+      res
+      // HttpResponse::NotImplemented().body("n")
+    }
     RouteResolver::DirPath(_) => HttpResponse::NotImplemented().body("n"),
   }
 }
 
 pub fn get_server(
-  server: Server,
+  server: BsServer,
   routes: Vec<StaticRoute>,
-) -> std::io::Result<actix_web::dev::Server> {
+) -> std::io::Result<(actix_web::dev::Server, BindAddress)> {
   std::env::set_var("RUST_LOG", "bs_core=debug");
   env_logger::init();
   let bind_address = get_bind_addresses(&server)?;
   let route_arc = Data::new(Arc::new(server.clone()));
 
-  Ok(
+  Ok((
     HttpServer::new(move || {
       let mut app = App::new()
         .app_data(route_arc.clone())
@@ -79,27 +89,28 @@ pub fn get_server(
           RouteResolver::RawString(RawString { .. }) => {
             app = app.service(web::resource(&route.path).route(web::route().to(raw_reader)));
           }
-          RouteResolver::FilePath(_) => {}
+          RouteResolver::FilePath(FilePath { .. }) => {
+            app = app.service(web::resource(&route.path).route(web::route().to(raw_reader)));
+          }
           RouteResolver::DirPath(DirPath { dir }) => {
             app = app.service(Files::new(&route.path, dir).index_file("index.html"));
           }
         }
       }
 
-      // app = app.service(Files::new("/", PathBuf::from(".")).index_file("index.html"));
-
       app
     })
     .disable_signals()
     .bind((bind_address.ip.as_str(), bind_address.port))?
     .run(),
-  )
+    bind_address,
+  ))
 }
 
 pub fn get_bind_addresses(
-  Server {
+  BsServer {
     bind: bind_address, ..
-  }: &Server,
+  }: &BsServer,
 ) -> Result<BindAddress, std::io::Error> {
   let as_host = bind_address.ip();
   let check = |num| TcpListener::bind((as_host.as_str(), num));
@@ -140,7 +151,7 @@ mod tests {
 
   #[test]
   async fn test_port() {
-    let s = Server {
+    let s = BsServer {
       bind: BindOptions {
         port: None,
         host: Some(BindHostOptions::LocalHost),
@@ -150,4 +161,8 @@ mod tests {
     let ap = get_bind_addresses(&s);
     println!("{:?}", ap);
   }
+}
+
+async fn index() -> impl Responder {
+  NamedFile::open_async("./static/index.html").await.unwrap()
 }

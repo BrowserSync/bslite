@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+use std::fmt::{write, Display, Formatter};
 use std::path::PathBuf;
 
 #[derive(Debug, Clone, serde::Deserialize, PartialEq)]
@@ -11,7 +13,10 @@ impl StaticRoute {
   pub fn file(path: impl Into<String>, file: impl Into<PathBuf>) -> Self {
     Self {
       path: path.into(),
-      resolve: RouteResolver::FilePath(FilePath { file: file.into() }),
+      resolve: RouteResolver::FilePath(FilePath {
+        file: file.into(),
+        headers: Default::default(),
+      }),
     }
   }
   pub fn dir(path: impl Into<String>, dir: impl Into<PathBuf>) -> Self {
@@ -36,6 +41,23 @@ pub enum RouteResolver {
   DirPath(DirPath),
 }
 
+impl Display for RouteResolver {
+  fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    let string = match self {
+      RouteResolver::RawString(RawString { raw }) => {
+        format!("RouteResolver::RawString {}", raw.bytes().len())
+      }
+      RouteResolver::FilePath(FilePath { file, headers }) => {
+        format!("RouteResolver::FilePath {} bytes", file.display())
+      }
+      RouteResolver::DirPath(DirPath { dir }) => {
+        format!("RouteResolver::DirPath {} bytes", dir.display())
+      }
+    };
+    write!(f, "{}", string)
+  }
+}
+
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]
 pub struct RawString {
   pub raw: String,
@@ -43,7 +65,8 @@ pub struct RawString {
 
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]
 pub struct FilePath {
-  file: PathBuf,
+  pub file: PathBuf,
+  pub headers: BTreeMap<String, String>,
 }
 
 #[derive(Debug, serde::Deserialize, PartialEq, Clone)]
@@ -63,7 +86,8 @@ mod tests {
     assert_eq!(
       r.resolve,
       RouteResolver::FilePath(FilePath {
-        file: PathBuf::from("index.js")
+        file: PathBuf::from("index.js"),
+        headers: Default::default(),
       })
     )
   }

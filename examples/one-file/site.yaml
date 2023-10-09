@@ -21,3 +21,12 @@ servers:
           Content-Security-Policy: frame-ancestors 'self'
         raw: |
           <h2> 🙈 Hello from iframe.html</h2>
+#      - path: /
+#        dir: ./
+      - path: /haha.css
+        headers:
+          shane: "kittens"
+          sally: "other"
+        file: ./style.css
+#      - path: /
+#        dir: ./

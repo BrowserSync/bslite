@@ -38,7 +38,7 @@
     "universal": "napi universal",
     "version": "napi version",
     "dd": "echo $TYPE_DEF_TMP_PATH",
-    "e2e": "npm run build; cd examples/hello-world && npm start"
+    "e2e": "npm run build && cd examples/hello-world && npm start"
   },
   "repository": "git@github.com:BrowserSync/bsrs.git"
 }
